@@ -19,6 +19,6 @@ SHA-256: `825812a9cba282be52738e4a2a55a59d7ab226c2aa26d4f2ca5af298da55b379`.
 
 Delapan blok script ditemukan pada source. Dua adapter diganti dan enam lainnya dipertahankan sebagai teks identik. Pemeriksaan ini mendukung retensi implementasi fitur, bukan klaim bahwa semua interaksi visual atau browser telah diverifikasi.
 
-Backend dites dengan mock layanan Google; adapter klien memakai mock DOM dan runner. Tidak ada browser regression, OAuth/login, deployment, consent, ACL domain, Sheets/Drive nyata, quota, MediaPipe CDN, atau pengujian live yang dijalankan. Checklist seluruh pengujian tersebut tetap kosong di `TESTING.md`.
+Hasil 22 test di atas berasal dari mock Google serta mock DOM/runner. Setelah suite lokal, smoke test nyata dijalankan: Pages dibuka, Apps Script versi 3 terbit, ping pemilik sukses, save match/snapshot sukses, daftar/histori match terbaca, baris Matches dan dua backup Drive terlihat, serta privasi Sheets/folder diperiksa. Rincian dan batas pengujian ada di DEPLOYMENT.md. Ini belum merupakan seluruh regresi browser, uji akun lain, restore penuh, quota, atau MediaPipe CDN.
 
 Perkembangan hosting/deployment setelah uji lokal dicatat terpisah di DEPLOYMENT.md. Tidak ada data atlet pengguna yang digunakan pada test lokal.
