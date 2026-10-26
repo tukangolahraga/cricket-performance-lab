@@ -2,6 +2,8 @@
 
 26 Oktober 2026.
 
+Pembaruan versi 4: tombol cloud memberi status memproses segera, menjelaskan jika permintaan lain sedang berjalan, dan berhenti menunggu setelah 60 detik tanpa respons. Timeout tidak dianggap gagal write definitif: periksa record/revisi sebelum retry. Suite lokal terbaru: 23 test lulus.
+
 - Repository GitHub dibuat: https://github.com/tukangolahraga/cricket-performance-lab
 - Proyek Apps Script baru: Cricket Performance Lab — V6.4 Private. Proyek Cricket Jakarta lama tidak diubah.
 - Backend diatur untuk Gmail pribadi, hanya pemilik (PERSONAL_OWNER).
