@@ -1,5 +1,7 @@
 # Pengujian dan checklist
 
+Smoke test nyata dijalankan pada 26 Oktober 2026 untuk hosting, ping pemilik, save match/snapshot, daftar/histori match, serta pemeriksaan Sheets/Drive dan privasi. Lihat DEPLOYMENT.md. Checklist berikut adalah prosedur penerimaan lengkap dan belum semuanya dijalankan.
+
 ## Pengujian otomatis lokal
 
 Jalankan `npm run check`. Backend dijalankan dalam Node VM dengan mock Google Session/Properties/Lock/Sheets/Drive/HTML Service. Ini tidak menghubungi Google. CI memakai suite sama. Lihat `VALIDATION.md` untuk hasil yang benar-benar dijalankan.
