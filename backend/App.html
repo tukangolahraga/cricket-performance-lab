@@ -1219,6 +1219,12 @@ window.CPL_CONFIG = {
  const scope='cpl_repo_'+(cloud?'cloud':'local')+'_';
  let busy=false;
  const msg=(s,target=status)=>{target.textContent=s;};
+ function reloadApp(){
+  if(!cloud){location.reload();return;}
+  // Reloading the HtmlService iframe itself can produce Google's blank frame.
+  panel.classList.add('open');msg('Data lokal sudah diperbarui. Klik Muat ulang aplikasi untuk memuat semua modul.');
+  const a=document.createElement('a');a.textContent='Muat ulang aplikasi';a.href=window.CPL_CONFIG.cloudAppUrl;a.target='_top';a.style.cssText='display:block;padding:16px;background:#00aa80;color:#041f1a;margin:12px 0;border-radius:9px;font-weight:bold';status.appendChild(a);
+ }
  const run=(name,arg)=>new Promise((resolve,reject)=>{if(!cloud)return reject(Error('Mode lokal. Buka workspace cloud untuk login dan sinkronisasi.'));const r=google.script.run.withSuccessHandler(resolve).withFailureHandler(e=>reject(Error(e.message||String(e))));if(arg===undefined)r[name]();else r[name](arg);});
  async function act(fn,target=status){if(busy)return;busy=true;try{await fn();}catch(e){msg('Gagal: '+e.message,target);}finally{busy=false;}}
  // A tab must retain its own baseline; another tab's save must not advance it.
@@ -1233,7 +1239,7 @@ window.CPL_CONFIG = {
  get('cpl-cloud-ping').onclick=()=>act(async()=>{const r=await run('ping');msg('Terhubung sebagai '+r.user+'\nRevisi server '+r.revision+'\nIni hanya pemeriksaan koneksi; belum ada data yang disimpan.');});
  get('cpl-cloud-load').onclick=()=>act(async()=>{
   if(!confirm('Ekspor bundle lokal dahulu. Ambil snapshot akan mengganti seluruh dataset lokal. Lanjutkan?'))return;
-  const r=await run('loadCloud');apply(r.datasets);remember('snapshotRevision',r.revision);location.reload();
+  const r=await run('loadCloud');apply(r.datasets);remember('snapshotRevision',r.revision);reloadApp();
  });
  get('cpl-cloud-save').onclick=()=>act(async()=>{
   let revision=read('snapshotRevision');
@@ -1245,7 +1251,7 @@ window.CPL_CONFIG = {
  get('cpl-cloud-box').appendChild(toolbar);
  get('cpl-export-bundle').onclick=()=>act(async()=>{exportBundle();msg('Ekspor berisi 13 dataset; video asli tidak disertakan. Simpan berkas pribadi.');});
  get('cpl-import-bundle').onclick=()=>get('cpl-bundle-file').click();
- get('cpl-bundle-file').onchange=()=>act(async()=>{const f=get('cpl-bundle-file').files[0];if(!f)return;if(f.size>8000000)throw Error('Maksimum 8 MB');const x=JSON.parse(await f.text());if(x.schema!=='CPL_LOCAL_TRANSFER_1')throw Error('Format bundle tidak dikenal');validateBundle(x.datasets);if(!confirm('Bundle akan mengganti data lokal. Ekspor data lama dahulu. Lanjutkan?'))return;apply(x.datasets);location.reload();});
+ get('cpl-bundle-file').onchange=()=>act(async()=>{const f=get('cpl-bundle-file').files[0];if(!f)return;if(f.size>8000000)throw Error('Maksimum 8 MB');const x=JSON.parse(await f.text());if(x.schema!=='CPL_LOCAL_TRANSFER_1')throw Error('Format bundle tidak dikenal');validateBundle(x.datasets);if(!confirm('Bundle akan mengganti data lokal. Ekspor data lama dahulu. Lanjutkan?'))return;apply(x.datasets);reloadApp();});
  const url=window.CPL_CONFIG?.cloudAppUrl||'';const link=get('cpl-open-workspace');
  if(/^https:\/\/script\.google\.com\/macros\/s\/[a-zA-Z0-9_-]+\/exec$/.test(url)){link.href=url;}else{link.removeAttribute('href');link.textContent='Workspace cloud belum dikonfigurasi di config.js';}
  window.cplDbRemoteMatches=[];
@@ -1258,7 +1264,7 @@ window.CPL_CONFIG = {
  const loadTools=document.createElement('div');loadTools.innerHTML='<button id="cpl-list-cloud">Daftar pertandingan cloud</button><select id="cpl-cloud-matches" aria-label="Pertandingan cloud"></select><button id="cpl-load-match">Muat pertandingan terpilih</button>';
  get('cpl-db-panel').appendChild(loadTools);
  get('cpl-list-cloud').onclick=()=>act(async()=>{const r=await run('dbListMatches'),select=get('cpl-cloud-matches');select.replaceChildren();for(const m of r.matches){const o=document.createElement('option');o.value=m.id;o.textContent=m.teams.join(' vs ')+' • '+m.id+' • r'+m.revision;select.appendChild(o);}msg(r.matches.length+' pertandingan ditemukan',db);},db);
- get('cpl-load-match').onclick=()=>act(async()=>{const id=get('cpl-cloud-matches').value;if(!id)throw Error('Pilih pertandingan');if(!confirm('Ekspor bundle dahulu. Pertandingan aktif akan diganti; undo/redo dikosongkan.'))return;const r=await run('dbLoadMatch',id);localStorage.setItem('cpl_t20_v11',JSON.stringify({match:r.match,undo:[],redo:[]}));const revs=read('matchRevisions')||{};revs[id]=r.revision;remember('matchRevisions',revs);location.reload();},db);
+ get('cpl-load-match').onclick=()=>act(async()=>{const id=get('cpl-cloud-matches').value;if(!id)throw Error('Pilih pertandingan');if(!confirm('Ekspor bundle dahulu. Pertandingan aktif akan diganti; undo/redo dikosongkan.'))return;const r=await run('dbLoadMatch',id);localStorage.setItem('cpl_t20_v11',JSON.stringify({match:r.match,undo:[],redo:[]}));const revs=read('matchRevisions')||{};revs[id]=r.revision;remember('matchRevisions',revs);match=r.match;undo=[];redo=[];render();msg('Pertandingan dimuat dari cloud: '+id+' • revisi '+r.revision,db);},db);
  msg(cloud?'Cloud tersedia; belum diperiksa.':'Mode lokal. Simpan cloud memerlukan workspace Apps Script.',db);
 })();
 </script></body></html>
