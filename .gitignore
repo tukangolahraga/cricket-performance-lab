@@ -1,0 +1,9 @@
+.clasp.json
+.clasprc.json
+.env*
+node_modules/
+coverage/
+*.log
+*transfer*.json
+*backup*.json
+!docs/source-manifest.json
