@@ -37,6 +37,8 @@ Jika CONFLICT: ekspor lokal, muat server terbaru, bandingkan lalu terapkan perub
 
 Spreadsheet/folder harus Restricted; tidak perlu sharing publik untuk Pages. Lihat DATABASE.md untuk skema/restore dan TESTING.md untuk uji live. Jangan memakai ID spreadsheet V6.4 lama karena skema berbeda. Muat arsip lama lewat frontend lalu simpan kembali setiap pertandingan.
 
+Setelah load snapshot atau impor bundle pada cloud, klik **Muat ulang aplikasi** agar halaman utama Apps Script dibuka kembali. Reload iframe internal langsung dapat menghasilkan halaman kosong; adapter sudah memakai tautan reload tingkat atas. Muat satu pertandingan memperbarui state scoring tanpa reload iframe.
+
 Update: edit source, build/tests, upload App/Code yang berubah, buat versi deployment baru yang sama. Jangan menumpuk backend lama dengan nama fungsi sama.
 
 ## Alternatif Workspace organisasi
