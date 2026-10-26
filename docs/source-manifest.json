@@ -1,0 +1,15 @@
+{
+  "source": "Downloaded local V6.4 Popup Edition file; chat API exposed no attachments",
+  "file": "reference/v6.4-popup-original.html",
+  "sha256": "825812a9cba282be52738e4a2a55a59d7ab226c2aa26d4f2ca5af298da55b379",
+  "scriptBlocks": 8,
+  "replacedScriptIds": [
+    "cpl-cloud-bridge",
+    "cpl-opponent-db-v64"
+  ],
+  "preservedOtherScriptBlocks": 6,
+  "generated": [
+    "index.html",
+    "backend/App.html"
+  ]
+}
