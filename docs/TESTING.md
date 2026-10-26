@@ -12,6 +12,8 @@ Mock tidak memodelkan seluruh perilaku Sheets (mis. formula/format sel), jaringa
 
 ## Regresi browser V6.4 — BELUM DIJALANKAN
 
+- [ ] Klik save menampilkan status memproses; klik ketika sibuk memberi penjelasan; balasan yang terlambat tidak dianggap sukses setelah timeout 60 detik. Periksa cloud dahulu sebelum retry karena write mungkin sudah committed.
+
 - [ ] Buka `index.html` dari file dan dari Pages; tidak ada error startup di console.
 - [ ] Buat T20 (11), SIXES (6), SUPER8 (8); jumlah pemain salah ditolak.
 - [ ] Catat 0/1/4/6 run, wide, no-ball, bye, leg-bye, wicket; periksa balls faced, over sah, free-hit, strike dan economy sesuai perilaku V6.4.
