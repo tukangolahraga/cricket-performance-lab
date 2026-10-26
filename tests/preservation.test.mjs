@@ -1,0 +1,13 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+import crypto from 'node:crypto';
+const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
+const original=read('reference/v6.4-popup-original.html'),generated=read('index.html');
+const blocks=html=>[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)];
+test('every non-adapter source script survives byte-for-byte as text',()=>{let n=0;for(const [,attrs,body] of blocks(original)){if(/id="(?:cpl-cloud-bridge|cpl-opponent-db-v64)"/.test(attrs))continue;assert.ok(generated.includes('<script'+attrs+'>'+body+'</script>'),'missing script '+attrs);n++;}assert.equal(n,blocks(original).length-2);assert.ok(n>0);});
+test('all original feature DOM IDs and popup buttons remain; generated hosts match',()=>{for(const [,id] of original.matchAll(/\bid="([^"]+)"/g)){if(['cpl-cloud-bridge','cpl-opponent-db-v64'].includes(id))continue;assert.ok(generated.includes('id="'+id+'"'),id);}assert.equal(generated,read('backend/App.html'));for(const id of ['cplOppPanel','cplIntelPanel','cpl-db-panel'])assert.ok(generated.includes('data-cpl-popup="'+id+'"'));});
+test('all inline scripts parse; original source checksum is recorded',()=>{for(const [,attrs,body] of blocks(generated))new vm.Script(body,{filename:attrs||'inline'});const manifest=JSON.parse(read('docs/source-manifest.json'));assert.equal(manifest.sha256,crypto.createHash('sha256').update(fs.readFileSync(new URL('../reference/v6.4-popup-original.html',import.meta.url))).digest('hex'));});
+test('cloud ping cannot update saved baseline, no cross-origin fetch or credentials',()=>{const bridge=read('scripts/client-bridge.js'),ping=bridge.split("get('cpl-cloud-ping').onclick")[1].split("get('cpl-cloud-load').onclick")[0];assert.ok(!ping.includes('remember('));assert.ok(!bridge.includes('fetch('));assert.ok(!bridge.includes('no-cors'));assert.ok(!read('config.js').includes('CPL_ALLOWED_EMAILS'));});
+test('revision baselines are tab-scoped',()=>{const bridge=read('scripts/client-bridge.js');assert.match(bridge,/const remember=.*sessionStorage\.setItem/);assert.match(bridge,/const read=.*sessionStorage\.getItem/);});
