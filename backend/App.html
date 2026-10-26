@@ -1225,8 +1225,20 @@ window.CPL_CONFIG = {
   panel.classList.add('open');msg('Data lokal sudah diperbarui. Klik Muat ulang aplikasi untuk memuat semua modul.');
   const a=document.createElement('a');a.textContent='Muat ulang aplikasi';a.href=window.CPL_CONFIG.cloudAppUrl;a.target='_top';a.style.cssText='display:block;padding:16px;background:#00aa80;color:#041f1a;margin:12px 0;border-radius:9px;font-weight:bold';status.appendChild(a);
  }
- const run=(name,arg)=>new Promise((resolve,reject)=>{if(!cloud)return reject(Error('Mode lokal. Buka workspace cloud untuk login dan sinkronisasi.'));const r=google.script.run.withSuccessHandler(resolve).withFailureHandler(e=>reject(Error(e.message||String(e))));if(arg===undefined)r[name]();else r[name](arg);});
- async function act(fn,target=status){if(busy)return;busy=true;try{await fn();}catch(e){msg('Gagal: '+e.message,target);}finally{busy=false;}}
+ const run=(name,arg)=>new Promise((resolve,reject)=>{
+  if(!cloud)return reject(Error('Mode lokal. Buka workspace cloud untuk login dan sinkronisasi.'));
+  let settled=false;
+  const finish=(fn,value)=>{if(settled)return;settled=true;clearTimeout(timer);fn(value);};
+  const timer=setTimeout(()=>finish(reject,Error('Google belum membalas dalam 60 detik. Data mungkin sudah tersimpan; periksa daftar pertandingan atau revisi server sebelum mencoba lagi.')),60000);
+  try{const r=google.script.run.withSuccessHandler(value=>finish(resolve,value)).withFailureHandler(e=>finish(reject,Error(e.message||String(e))));if(arg===undefined)r[name]();else r[name](arg);}catch(e){finish(reject,e);}
+ });
+ async function act(fn,target=status){
+  if(busy){msg('Permintaan cloud lain masih berjalan. Tunggu hingga selesai; jika belum ada balasan, pesan batas waktu akan muncul dalam 60 detik.',target);return;}
+  busy=true;msg('⏳ Sedang memproses permintaan. Tunggu konfirmasi dari Google…',target);
+  const button=target===db?get('cpl-db-save'):null,oldLabel=button?.textContent;
+  if(button){button.disabled=true;button.textContent='⏳ Memproses…';}
+  try{await fn();}catch(e){msg('Gagal: '+e.message,target);}finally{busy=false;if(button){button.disabled=false;button.textContent=oldLabel;}}
+ }
  // A tab must retain its own baseline; another tab's save must not advance it.
  const read=key=>{try{return JSON.parse(sessionStorage.getItem(scope+key)||'null');}catch{return null;}};
  const remember=(key,value)=>sessionStorage.setItem(scope+key,JSON.stringify(value));
