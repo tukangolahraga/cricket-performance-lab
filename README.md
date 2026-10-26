@@ -2,7 +2,7 @@
 
 Repository siap diunggah ke GitHub, dengan frontend V6.4 asli, backend Apps Script, indeks pertandingan ternormalisasi di Sheets, dan backup Drive.
 
-**22 test lokal lulus. Status hosting, deployment, dan uji layanan nyata dicatat di [DEPLOYMENT.md](docs/DEPLOYMENT.md).**
+**23 test lokal lulus. Status hosting, deployment, dan uji layanan nyata dicatat di [DEPLOYMENT.md](docs/DEPLOYMENT.md).**
 
 Mulai dari [panduan instalasi](docs/SETUP.md). Uji penyimpanan nyata menggunakan [checklist](docs/TESTING.md) setelah Anda menyiapkan deployment sendiri.
 
