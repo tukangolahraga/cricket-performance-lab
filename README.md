@@ -2,7 +2,7 @@
 
 Repository siap diunggah ke GitHub, dengan frontend V6.4 asli, backend Apps Script, indeks pertandingan ternormalisasi di Sheets, dan backup Drive.
 
-**Status: dibuat dan diuji lokal dengan layanan Google tiruan. Belum diunggah, belum dideploy, belum login Google, dan belum diuji terhadap Sheets/Drive sungguhan.**
+**22 test lokal lulus. Status hosting, deployment, dan uji layanan nyata dicatat di [DEPLOYMENT.md](docs/DEPLOYMENT.md).**
 
 Mulai dari [panduan instalasi](docs/SETUP.md). Uji penyimpanan nyata menggunakan [checklist](docs/TESTING.md) setelah Anda menyiapkan deployment sendiri.
 
